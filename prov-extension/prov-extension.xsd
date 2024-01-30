@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <xsd:schema
+      xmlns="http://quantme.org/quantum4prov"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      xmlns:prov="http://www.w3.org/ns/prov#"
+      targetNamespace="http://quantme.org/quantum4prov">
+
+      <xsd:complexType name="QuantumComputer">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Agent">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="name"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="provider"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="version"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="lastCalibrated"
+                  type="xsd:date" use="required"/>
+               <xsd:attribute name="maxShots"
+                  type="xsd:integer" use="required"/>
+               <xsd:attribute name="queueSize"
+                  type="xsd:integer" use="required"/>
+               <xsd:attribute name="isSimulator"
+                  type="xsd:boolean" use="required"/>
+               <xsd:attribute name="numberOfQubits"
+                  type="xsd:positiveInteger" use="required"/>
+                <xsd:sequence>
+                    <xsd:element name="qubits" type="prov:Qubit" minOccurs="1" maxOccurs="unbounded"/>
+               </xsd:sequence>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="Qubit">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Entity">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="name"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="t1Time"
+                  type="xsd:decimal" use="required"/>
+               <xsd:attribute name="t2Time"
+                  type="xsd:decimal" use="required"/>
+               <xsd:attribute name="readoutError"
+                  type="xsd:decimal" use="required"/>
+               <xsd:sequence>
+                    <xsd:element name="quantumComputer" type="prov:QuantumComputer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="connectedQubits" type="prov:Qubit" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="supportedGates" type="prov:Gate" minOccurs="1" maxOccurs="unbounded"/>
+               </xsd:sequence>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="Gate">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Entity">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="name"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="gateTime"
+                  type="xsd:decimal" use="required"/>
+               <xsd:attribute name="gateFidelity"
+                  type="xsd:decimal" use="required"/>
+               <xsd:sequence>
+                    <xsd:element name="quantumComputer" type="prov:QuantumComputer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="operatingQubits" type="prov:Qubit" minOccurs="1" maxOccurs="unbounded"/>
+               </xsd:sequence>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="QuantumCircuit">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Entity">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="width"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="depth"
+                  type="xsd:positiveInteger" use="required"/>
+               <xsd:attribute name="size"
+                  type="xsd:positiveInteger" use="required"/>
+                <xsd:attribute name="codeURI"
+                  type="xs:anyURI" use="required"/>
+                <xsd:attribute name="appliedEncoding"
+                  type="xs:string"/>
+               <xsd:sequence>
+                    <xsd:element name="qubits" type="prov:Qubit" minOccurs="1" maxOccurs="unbounded"/>
+                    <xsd:element name="gates" type="prov:Gate" minOccurs="0" maxOccurs="unbounded"/>
+               </xsd:sequence>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="Compiler">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Agent">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="name"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="provider"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="version"
+                  type="xsd:string" use="required"/>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="Compile">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Activity">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="compilationTime"
+                  type="xsd:date" use="required"/>
+               <xsd:attribute name="compilationDuration"
+                  type="xsd:decimal" use="required"/>
+               <xsd:attribute name="optimizationGoal"
+                  type="xsd:string" use="required"/>
+               <xsd:attribute name="randomSeed"
+                  type="xsd:string" use="required"/>
+                <xsd:sequence>
+                    <xsd:element name="compiler" type="prov:Compiler" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="inputCircuit" type="prov:QuantumCircuit" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="outputCircuit" type="prov:QuantumCircuit" minOccurs="1" maxOccurs="1"/>
+               </xsd:sequence>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="Execute">
+         <xsd:complexContent>
+            <xsd:extension base="prov:Activity">
+               <xsd:attribute name="id"
+                  type="prov:UUID" use="required"/>
+               <xsd:attribute name="executionTime"
+                  type="xsd:date" use="required"/>
+               <xsd:attribute name="numberOfShots"
+                  type="xsd:int" use="required"/>
+               <xsd:attribute name="numberOfIterations"
+                  type="xsd:string"/>
+               <xsd:attribute name="randomSeed"
+                  type="xsd:string" use="required"/>
+                <xsd:sequence>
+                    <xsd:element name="quantumComputer" type="prov:QuantumComputer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="executedCircuit" type="prov:QuantumCircuit" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="result" type="prov:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="appliedMitigation" type="prov:string" minOccurs="0" maxOccurs="unbounded"/>
+               </xsd:sequence>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+
+    <xsd:simpleType name="UUID">
+        <xsd:restriction base="ID">
+            <xsd:pattern
+                value="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}">
+            </xsd:pattern>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>
